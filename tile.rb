@@ -16,4 +16,8 @@ class Tile
   def neighbor_bomb_count
   end
 
+  def flagged?
+    @flagged
+  end
+
 end

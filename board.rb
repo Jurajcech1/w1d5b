@@ -32,7 +32,7 @@ class Board
       neighbor = []
       neighbor << transformation[0] + pos[0]
       neighbor << transformation[1] + pos[1]
-      state = @board[neighbor[0]][neighbor[1]].status
+      state = @grid[neighbor[0]][neighbor[1]].status
       neighbors_arr << neighbor if on_board?(neighbor) && state != :r && state.class != Fixnum
     end
     neighbors_arr
@@ -42,7 +42,7 @@ class Board
     neighbors = neighbors(pos)
     count = 0
     neighbors.each do |neighbor|
-      count += 1 if @board[neighbor[0]][neighbor[1]].status == :b
+      count += 1 if @grid[neighbor[0]][neighbor[1]].status == :b
     end
     count
   end
@@ -54,12 +54,34 @@ class Board
       current_pos = queue.shift
       num_bombs = surrounding_bombs(current_pos)
       if num_bombs > 0
-        @board[current_pos[0]][current_pos[1]].status = num_bombs
+        @grid[current_pos[0]][current_pos[1]].status = num_bombs
       else
         queue += neighbors(pos)
-        @board[current_pos[0]][current_pos[1]].status = :r
+        @grid[current_pos[0]][current_pos[1]].status = :r
       end
     end
+  end
+
+  def render
+
+    puts"  |0||1||2||3||4||5||6||7||8|"
+    @grid.each_with_index do |row, i|
+      line = "#{i} "
+      row.each do |tile|
+        if tile.status == :r
+          line += "|_|"
+        elsif tile.flagged?
+          line += "|f|"
+        elsif tile.status == :b ||  tile.status.nil?
+          line += "|*|"
+        elsif tile.status.class == Fixnum
+          line += "|#{tile.status}|"
+        end
+      end
+      puts line
+    end
+
+
   end
 
 
@@ -69,7 +91,8 @@ end
 
 
 
-# test_board = Board.new
+test_board = Board.new
 # test_board.grid.each do |line|
 #   line.each {|tile| p tile.status}
 # end
+test_board.render
