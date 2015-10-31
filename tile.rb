@@ -14,4 +14,6 @@ class Tile
     @flagged
   end
 
+  
+
 end
